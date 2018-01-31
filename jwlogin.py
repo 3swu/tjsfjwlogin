@@ -55,11 +55,11 @@ class login(object):
         c.update(a.hexdigest().encode('utf-8'))
         c.update(b.hexdigest().encode('utf-8'))
         self.password = c.hexdigest()
-        print('md5 encoded password: ', self.password)
+        print('md5 encoded password parameter: ', self.password)
 
     def username_encode(self):
         self.username = base64.b64encode(self.username.encode('utf-8') + b';;' + self.sessionid.encode('utf-8'))
-        print('base64 encoded username: ', self.username)
+        print('base64 encoded username parameter: ', self.username)
 
     def login(self):
         un = '_u' + self.verifcode
@@ -82,8 +82,10 @@ class login(object):
         result = json.loads(response.text)
         if result['status'] == '401':
             print('verification code error')
+            exit(1)
         elif result['status'] == '402':
             print('username or password error')
+            exit(1)
         elif result['status'] == '200':
             print('log in sussess')
 
@@ -95,6 +97,7 @@ def go():
     l.password_encode()
     l.username_encode()
     l.login()
+    return l.session, l.sessionid
 
 if __name__ == '__main__':
     go()
